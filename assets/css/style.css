@@ -2,3 +2,16 @@ body {
   background-color: #232629;
   color: #fff;
 }
+
+#gifContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+}
+
+.gif {
+  width: 220px;
+  margin: 10px;
+}
