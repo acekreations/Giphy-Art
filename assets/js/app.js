@@ -73,7 +73,7 @@ function toggleGif(thisGif) {
 $(function(){
 //initialize
 renderTags(defaultTags);
-fetchGifs("Abstract");
+// fetchGifs("Abstract");
 
 //load new gifs when tag is clicked
 $("#tagContainer").on("click", ".tag", function(){
