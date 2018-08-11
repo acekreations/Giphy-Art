@@ -21,7 +21,8 @@ body {
 }
 
 .gif, .favGif {
-  max-width: 100%;
+  max-width: 220px;
+  max-height: 220px;
   display: block;
   transition: all 0.3s;
   cursor: pointer;
@@ -37,7 +38,7 @@ body {
   bottom: 15px;
   right: 15px;
   display: none;
-  transition: all 0.3s;
+  cursor: pointer;
 }
 
 .favGif {

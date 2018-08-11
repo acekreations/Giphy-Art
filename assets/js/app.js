@@ -23,8 +23,9 @@ function renderTitle(tag) {
 }
 
 //get gifs based on tag that was clicked or the default "abstract" query, then display new gifs on page.
-function fetchGifs(tag) {
+function fetchGifs(tag, loadMore) {
   renderTitle(tag);
+  $("#loadMore").attr("data-tag", tag);
   //get rand num for the offset query in the api
   var offset = Math.floor(Math.random() * 1000);
   // var apiKey = "nFQ89Mq5zf85yyf2d2OqQFzI7x9XfRWz";
@@ -34,12 +35,14 @@ function fetchGifs(tag) {
     url: queryURL,
     method: "GET"
   }).then(function(response){
-    $("#gifContainer").empty();
+    //if loadmore button was NOT pressed empty the gif container
+    if (!loadMore) { $("#gifContainer").empty() };
+
     for (var i = 0; i < response.data.length; i++) {
       var stillUrl = response.data[i].images["480w_still"].url;
       var gifUrl = response.data[i].images.downsized.url;
       var newGif = $("<img class='gif'>").attr("data-gifurl", gifUrl).attr("data-stillurl", stillUrl).attr("data-imgtype", "still").attr("src", stillUrl);
-      var favoriteBtn = '<span class="badge badge-secondary favoriteBtn"><i class="far fa-star"></i></span>';
+      var favoriteBtn = '<span class="badge favoriteBtn" style="display: none;"><i class="far fa-star fa-2x"></i></span>';
       var gifDiv = $("<div class='gifDiv'>").append(newGif, favoriteBtn);
       $("#gifContainer").append(gifDiv);
     }
@@ -49,6 +52,7 @@ function fetchGifs(tag) {
 //collect users new tag and reload tag container
 function addUserTag() {
   var userTag = $("#addTagInput").val().trim().toLowerCase();
+
   if (userTag.length > 2 && defaultTags.indexOf(userTag) === -1) {
     defaultTags.push(userTag);
     renderTags(defaultTags);
@@ -76,6 +80,7 @@ function setFavorite(favoritedGif) {
   var stillUrl = favoritedGif.data("stillurl");
   var gifUrl = favoritedGif.data("gifurl");
   var favArrItem = {"stillUrl": stillUrl, "gifUrl": gifUrl};
+
   if (Cookies.get('favoriteGifs')) {
     var existingFavoriteGifsArr = Cookies.getJSON('favoriteGifs');
     //append new gif to existing cookie obj, push() does not work
@@ -92,6 +97,7 @@ function setFavorite(favoritedGif) {
 
 //display users favorite gifs on the page
 function renderFavorites() {
+  $("#favoritesContainer").empty();
   if (Cookies.get('favoriteGifs')) {
     var favoritesArr = Cookies.getJSON('favoriteGifs');
     for (var i = 0; i < favoritesArr.favs.length; i++) {
@@ -113,13 +119,19 @@ function renderFavorites() {
 $(function(){
   //initialize
   renderTags(defaultTags);
-  fetchGifs("Abstract");
+  fetchGifs("Abstract", false);
   renderFavorites();
 
   //load new gifs when tag is clicked
   $("#tagContainer").on("click", ".tag", function(){
     var tag = $(this).attr("data-tag");
-    fetchGifs(tag);
+    fetchGifs(tag, false);
+  });
+
+  //load more gifs when load more button is pressed
+  $("#loadMore").on("click", function(){
+    var tag = $(this).attr("data-tag");
+    fetchGifs(tag, true);
   });
 
   //add new user tag when form is submitted
