@@ -1,3 +1,9 @@
+jQuery.ajaxPrefilter(function (options) {
+  if (options.crossDomain && jQuery.support.cors) {
+    options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
+  }
+});
+
 var defaultTags = ["abstract", "minimal", "geometric", "trippy", "illustration", "3d", "design", "motion graphics", "pattern", "color"];
 
 function renderTags(tagArr) {
@@ -17,7 +23,8 @@ function renderTitle(tag) {
 function fetchGifs(tag) {
   renderTitle(tag);
   var offset = Math.floor(Math.random() * 1000);
-  var apiKey = "nFQ89Mq5zf85yyf2d2OqQFzI7x9XfRWz";
+  // var apiKey = "nFQ89Mq5zf85yyf2d2OqQFzI7x9XfRWz";
+  var apiKey = "bukNnkHciMEN5ODtDi4RwYv9ks57W5GV";
   var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=" + apiKey + "&q=" + tag + "&limit=10&rating=g&offset=" + offset;
   $.ajax({
     url: queryURL,
@@ -29,10 +36,10 @@ function fetchGifs(tag) {
       var stillUrl = response.data[i].images["480w_still"].url;
       var gifUrl = response.data[i].images.downsized.url;
       var newGif = $("<img class='gif' style='display:none;'>").attr("data-gifurl", gifUrl).attr("data-stillurl", stillUrl).attr("data-imgtype", "still").attr("src", stillUrl);
-      newGif.bind("load", function () { $(this).fadeIn(); });
+      newGif.bind("load", function () { $(this).fadeIn("slow"); });
       //var overlay = $("<div class='gifOverlay'>");
-      var downloadBtn = $("<a class='btn btn-secondary btn-sm download' target='_blank' download>").text("Download").attr("href", gifUrl);
-      var gifDiv = $("<div class='gifDiv'>").append(newGif, downloadBtn);
+      // var downloadBtn = $("<a class='btn btn-secondary btn-sm download' target='_blank' download>").text("Download").attr("href", gifUrl);
+      var gifDiv = $("<div class='gifDiv'>").append(newGif);
       $("#gifContainer").append(gifDiv);
     }
   })
