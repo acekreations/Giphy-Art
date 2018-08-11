@@ -12,16 +12,35 @@ body {
 }
 
 .gifDiv {
+  width: 220px;
+  height: 220px;
   position: relative;
   margin: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .gif {
-  width: 220px;
+  max-width: 220px;
+  max-height: 220px;
   display: block;
+  transition: all 0.3s;
+  cursor: pointer;
 }
 
-.gifOverlay {
+.gif:hover {
+  opacity: 0.8;
+}
+
+.download {
+  position: absolute;
+  bottom: 5px;
+  display: none;
+  transition: all 0.3s;
+}
+
+/* .gifOverlay {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -35,4 +54,4 @@ body {
 
 .gifOverlay:hover {
   background-color: rgba(0,0,0,0.2);
-}
+} */
