@@ -35,11 +35,9 @@ function fetchGifs(tag) {
     for (var i = 0; i < response.data.length; i++) {
       var stillUrl = response.data[i].images["480w_still"].url;
       var gifUrl = response.data[i].images.downsized.url;
-      var newGif = $("<img class='gif' style='display:none;'>").attr("data-gifurl", gifUrl).attr("data-stillurl", stillUrl).attr("data-imgtype", "still").attr("src", stillUrl);
-      newGif.bind("load", function () { $(this).fadeIn("slow"); });
-      //var overlay = $("<div class='gifOverlay'>");
-      // var downloadBtn = $("<a class='btn btn-secondary btn-sm download' target='_blank' download>").text("Download").attr("href", gifUrl);
-      var gifDiv = $("<div class='gifDiv'>").append(newGif);
+      var newGif = $("<img class='gif'>").attr("data-gifurl", gifUrl).attr("data-stillurl", stillUrl).attr("data-imgtype", "still").attr("src", stillUrl);
+      var favoriteBtn = '<span class="badge badge-secondary favoriteBtn"><i class="far fa-star"></i></span>';
+      var gifDiv = $("<div class='gifDiv'>").append(newGif, favoriteBtn);
       $("#gifContainer").append(gifDiv);
     }
   })
@@ -68,36 +66,80 @@ function toggleGif(thisGif) {
   }
 }
 
+function setFavorite(favoritedGif) {
+  var stillUrl = favoritedGif.data("stillurl");
+  var gifUrl = favoritedGif.data("gifurl");
+  var favArrItem = {"stillUrl": stillUrl, "gifUrl": gifUrl};
+  if (Cookies.get('favoriteGifs')) {
+    console.log("it exists");
+    var existingFavoriteGifsArr = Cookies.getJSON('favoriteGifs');
+    //append new gif to existing cookie obj, push() does not work
+    existingFavoriteGifsArr.favs[existingFavoriteGifsArr.favs.length] = favArrItem;
+    Cookies.set('favoriteGifs', existingFavoriteGifsArr, { expires: 90 });
+  }
+  else {
+    console.log("it does not exists");
+    var favArr = [favArrItem];
+    favArr = {"favs": favArr};
+    Cookies.set('favoriteGifs', favArr, { expires: 90 });
+  }
+  console.log("updated cookie:" + Cookies.get('favoriteGifs'));
+}
+
+function displayFavorites() {
+  if (Cookies.get('favoriteGifs')) {
+    var favoritesArr = Cookies.getJSON('favoriteGifs');
+    for (var i = 0; i < favoritesArr.favs.length; i++) {
+      var stillUrl = favoritesArr.favs[i].stillUrl;
+      var gifUrl = favoritesArr.favs[i].gifUrl;
+      var favLink = $("<a class='favGif' target='_blank'>").attr("href", gifUrl);
+      var favImg = $("<img>").attr("src", stillUrl);
+      favImg.attr("data-stillurl", stillUrl);
+      favImg.attr("data-gifurl", gifUrl);
+      favImg.attr("data-imgtype", "still");
+      favLink.html(favImg);
+      $("#favoritesContainer").append(favLink);
+    }
+  }
+}
+
 
 //jquery ready
 $(function(){
-//initialize
-renderTags(defaultTags);
-// fetchGifs("Abstract");
+  //initialize
+  renderTags(defaultTags);
+  fetchGifs("Abstract");
+  displayFavorites();
 
-//load new gifs when tag is clicked
-$("#tagContainer").on("click", ".tag", function(){
-  var tag = $(this).attr("data-tag");
-  fetchGifs(tag);
-});
+  //load new gifs when tag is clicked
+  $("#tagContainer").on("click", ".tag", function(){
+    var tag = $(this).attr("data-tag");
+    fetchGifs(tag);
+  });
 
-//add new user tag when form is submitted
-$("#addTag").on("click", function(){
-  event.preventDefault();
-  addUserTag();
-});
+  //add new user tag when form is submitted
+  $("#addTag").on("click", function(){
+    event.preventDefault();
+    addUserTag();
+  });
 
-$("#gifContainer").on("click", ".gif", function(){
-  var thisGif = $(this);
-  toggleGif(thisGif);
-});
+  $("#gifContainer").on("click", ".gif", function(){
+    var thisGif = $(this);
+    toggleGif(thisGif);
+  });
 
-//toggle download button
-$("#gifContainer").on("mouseenter", ".gifDiv", function(){
-  $(this).children(".download").show();
-});
-$("#gifContainer").on("mouseleave", ".gifDiv", function(){
-  $(this).children(".download").hide();
-});
+  //toggle download button
+  $("#gifContainer").on("mouseenter", ".gifDiv", function(){
+    $(this).children(".favoriteBtn").show();
+  });
+  $("#gifContainer").on("mouseleave", ".gifDiv", function(){
+    $(this).children(".favoriteBtn").hide();
+  });
+
+  //add gif to favorites
+  $("#gifContainer").on("click", ".favoriteBtn", function(){
+    var favoritedGif = $(this).siblings(".gif");
+    setFavorite(favoritedGif);
+  });
 
 });

@@ -16,7 +16,7 @@
       <div class="col-4"></div>
       <div class="col-4 text-center">
         <h1 class="text-uppercase display-5 h4">Giphy Art <i class="far fa-file-image ml-2" style="transform: rotate(35deg);"></i></h1>
-        <p class="small text-muted mb-0">Find Your Favorite Gif Art</p>
+        <p class="small text-muted mb-0">Collect Your Favorite Gif Art</p>
       </div>
       <div class="col-4"></div>
     </nav>
@@ -27,16 +27,20 @@
           <div id="tagContainer" class="mt-5 mb-4 text-center">
             <!-- new tag buttons render here -->
           </div>
-          <hr class="border border-dark">
-          <div id="searchContainer" class="mt-4">
+          <div id="searchContainer" class="mt-5 mb-4">
             <form class="" action="#">
               <div class="input-group mb-3">
-                <input type="text" id="addTagInput" class="form-control" placeholder="Add New Term">
+                <input type="text" id="addTagInput" class="form-control" placeholder="Search New Tag">
                 <div class="input-group-append">
-                  <button class="btn btn-secondary" type="button" id="addTag">Add</button>
+                  <button class="btn btn-secondary" type="button" id="addTag">Search <i class="fas fa-search"></i></button>
                 </div>
               </div>
             </form>
+          </div>
+          <hr class="border border-dark">
+          <h2 class="display-4">Favorites</h2>
+          <div id="favoritesContainer">
+
           </div>
         </div>
         <!-- add verticle space between content -->
@@ -45,7 +49,8 @@
           <h1 id="tagTitle" class="display-3 mt-4 text-capitalize">Abstract</h1>
           <hr class="border border-dark">
           <div id="gifContainer" class="grid">
-
+            <!-- <div class="gifDiv"><img class="gif" style="" data-gifurl="https://media3.giphy.com/media/3j7BFfhshlfcQ/giphy-downsized.gif" data-stillurl="https://media3.giphy.com/media/3j7BFfhshlfcQ/480w_s.jpg" data-imgtype="still" src="https://media3.giphy.com/media/3j7BFfhshlfcQ/480w_s.jpg"><span class="badge favoriteBtn" style="display: none;"><i class="far fa-star fa-2x"></i></span></div>
+            <div class="gifDiv"><img class="gif" style="" data-gifurl="https://media2.giphy.com/media/zOZrrDho6tVZu/giphy-tumblr.gif" data-stillurl="https://media2.giphy.com/media/zOZrrDho6tVZu/480w_s.jpg" data-imgtype="still" src="https://media2.giphy.com/media/zOZrrDho6tVZu/480w_s.jpg"><span class="badge favoriteBtn" style="display: none;"><i class="far fa-star fa-2x"></i></span></div> -->
           </div>
         </div>
       </div>
@@ -55,6 +60,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
     <script src="assets/js/app.js" charset="utf-8"></script>
   </body>
 </html>
