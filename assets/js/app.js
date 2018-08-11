@@ -6,6 +6,7 @@ jQuery.ajaxPrefilter(function (options) {
 
 var defaultTags = ["abstract", "minimal", "geometric", "trippy", "illustration", "3d", "design", "motion graphics", "pattern", "color"];
 
+//dipslay tags on page
 function renderTags(tagArr) {
   $("#tagContainer").empty();
   for (var i = 0; i < tagArr.length; i++) {
@@ -16,12 +17,15 @@ function renderTags(tagArr) {
   }
 }
 
+//display title above gifs
 function renderTitle(tag) {
   $("#tagTitle").text(tag);
 }
 
+//get gifs based on tag that was clicked or the default "abstract" query, then display new gifs on page.
 function fetchGifs(tag) {
   renderTitle(tag);
+  //get rand num for the offset query in the api
   var offset = Math.floor(Math.random() * 1000);
   // var apiKey = "nFQ89Mq5zf85yyf2d2OqQFzI7x9XfRWz";
   var apiKey = "bukNnkHciMEN5ODtDi4RwYv9ks57W5GV";
@@ -31,7 +35,6 @@ function fetchGifs(tag) {
     method: "GET"
   }).then(function(response){
     $("#gifContainer").empty();
-    console.log(response);
     for (var i = 0; i < response.data.length; i++) {
       var stillUrl = response.data[i].images["480w_still"].url;
       var gifUrl = response.data[i].images.downsized.url;
@@ -43,6 +46,7 @@ function fetchGifs(tag) {
   })
 }
 
+//collect users new tag and reload tag container
 function addUserTag() {
   var userTag = $("#addTagInput").val().trim().toLowerCase();
   if (userTag.length > 2 && defaultTags.indexOf(userTag) === -1) {
@@ -53,6 +57,7 @@ function addUserTag() {
   }
 }
 
+//switch still images to gif images on click
 function toggleGif(thisGif) {
   if (thisGif.attr("data-imgtype") === "still") {
     var gifUrl = thisGif.attr("data-gifurl");
@@ -66,27 +71,27 @@ function toggleGif(thisGif) {
   }
 }
 
+//get and set new favorite gif when star on page is clicked
 function setFavorite(favoritedGif) {
   var stillUrl = favoritedGif.data("stillurl");
   var gifUrl = favoritedGif.data("gifurl");
   var favArrItem = {"stillUrl": stillUrl, "gifUrl": gifUrl};
   if (Cookies.get('favoriteGifs')) {
-    console.log("it exists");
     var existingFavoriteGifsArr = Cookies.getJSON('favoriteGifs');
     //append new gif to existing cookie obj, push() does not work
     existingFavoriteGifsArr.favs[existingFavoriteGifsArr.favs.length] = favArrItem;
     Cookies.set('favoriteGifs', existingFavoriteGifsArr, { expires: 90 });
   }
   else {
-    console.log("it does not exists");
     var favArr = [favArrItem];
     favArr = {"favs": favArr};
     Cookies.set('favoriteGifs', favArr, { expires: 90 });
   }
-  console.log("updated cookie:" + Cookies.get('favoriteGifs'));
+  renderFavorites();
 }
 
-function displayFavorites() {
+//display users favorite gifs on the page
+function renderFavorites() {
   if (Cookies.get('favoriteGifs')) {
     var favoritesArr = Cookies.getJSON('favoriteGifs');
     for (var i = 0; i < favoritesArr.favs.length; i++) {
@@ -109,7 +114,7 @@ $(function(){
   //initialize
   renderTags(defaultTags);
   fetchGifs("Abstract");
-  displayFavorites();
+  renderFavorites();
 
   //load new gifs when tag is clicked
   $("#tagContainer").on("click", ".tag", function(){
