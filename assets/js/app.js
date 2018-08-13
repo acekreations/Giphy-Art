@@ -28,8 +28,8 @@ function fetchGifs(tag, loadMore) {
   $("#loadMore").attr("data-tag", tag);
   //get rand num for the offset query in the api
   var offset = Math.floor(Math.random() * 1000);
-  // var apiKey = "nFQ89Mq5zf85yyf2d2OqQFzI7x9XfRWz";
-  var apiKey = "bukNnkHciMEN5ODtDi4RwYv9ks57W5GV";
+  var apiKey = "nFQ89Mq5zf85yyf2d2OqQFzI7x9XfRWz";
+  // var apiKey = "bukNnkHciMEN5ODtDi4RwYv9ks57W5GV";
   var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=" + apiKey + "&q=" + tag + "&limit=10&rating=g&offset=" + offset;
   $.ajax({
     url: queryURL,
@@ -81,16 +81,16 @@ function setFavorite(favoritedGif) {
   var gifUrl = favoritedGif.data("gifurl");
   var favArrItem = {"stillUrl": stillUrl, "gifUrl": gifUrl};
 
-  if (Cookies.get('favoriteGifs')) {
-    var existingFavoriteGifsArr = Cookies.getJSON('favoriteGifs');
+  if (localStorage.getItem('favoriteGifs')) {
+    var existingFavoriteGifsArr = JSON.parse(localStorage.getItem('favoriteGifs'));
     //append new gif to existing cookie obj, push() does not work
     existingFavoriteGifsArr.favs[existingFavoriteGifsArr.favs.length] = favArrItem;
-    Cookies.set('favoriteGifs', existingFavoriteGifsArr, { expires: 90 });
+    localStorage.setItem('favoriteGifs', JSON.stringify(existingFavoriteGifsArr));
   }
   else {
     var favArr = [favArrItem];
     favArr = {"favs": favArr};
-    Cookies.set('favoriteGifs', favArr, { expires: 90 });
+    localStorage.setItem("favoriteGifs", JSON.stringify(favArr));
   }
   renderFavorites();
 }
@@ -98,8 +98,8 @@ function setFavorite(favoritedGif) {
 //display users favorite gifs on the page
 function renderFavorites() {
   $("#favoritesContainer").empty();
-  if (Cookies.get('favoriteGifs')) {
-    var favoritesArr = Cookies.getJSON('favoriteGifs');
+  if (localStorage.getItem('favoriteGifs')) {
+    var favoritesArr = JSON.parse(localStorage.getItem('favoriteGifs'));
     for (var i = 0; i < favoritesArr.favs.length; i++) {
       var stillUrl = favoritesArr.favs[i].stillUrl;
       var gifUrl = favoritesArr.favs[i].gifUrl;
