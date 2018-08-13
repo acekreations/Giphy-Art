@@ -140,7 +140,11 @@ $(function(){
     addUserTag();
   });
 
-  $("#gifContainer").on("click", ".gif", function(){
+  $("#gifContainer").on("mouseenter", ".gif", function(){
+    var thisGif = $(this);
+    toggleGif(thisGif);
+  });
+  $("#gifContainer").on("mouseleave", ".gif", function(){
     var thisGif = $(this);
     toggleGif(thisGif);
   });
