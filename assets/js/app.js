@@ -81,8 +81,15 @@ function setFavorite(favoritedGif) {
   var gifUrl = favoritedGif.data("gifurl");
   var favArrItem = {"stillUrl": stillUrl, "gifUrl": gifUrl};
 
+  //check if favorite already exists
   if (localStorage.getItem('favoriteGifs')) {
     var existingFavoriteGifsArr = JSON.parse(localStorage.getItem('favoriteGifs'));
+
+    for (var i = 0; i < existingFavoriteGifsArr.favs.length; i++) {
+      if (existingFavoriteGifsArr.favs[i].stillUrl === stillUrl) {
+        return "Favorite already exists";
+      }
+    }
     //append new gif to existing cookie obj, push() does not work
     existingFavoriteGifsArr.favs[existingFavoriteGifsArr.favs.length] = favArrItem;
     localStorage.setItem('favoriteGifs', JSON.stringify(existingFavoriteGifsArr));
@@ -140,21 +147,16 @@ $(function(){
     addUserTag();
   });
 
-  $("#gifContainer").on("mouseenter", ".gif", function(){
-    var thisGif = $(this);
-    toggleGif(thisGif);
-  });
-  $("#gifContainer").on("mouseleave", ".gif", function(){
-    var thisGif = $(this);
-    toggleGif(thisGif);
-  });
-
-  //toggle download button
+  //toggle still/animated gif and show favorite button
   $("#gifContainer").on("mouseenter", ".gifDiv", function(){
     $(this).children(".favoriteBtn").show();
+    var thisGif = $(this).children(".gif");
+    toggleGif(thisGif);
   });
   $("#gifContainer").on("mouseleave", ".gifDiv", function(){
     $(this).children(".favoriteBtn").hide();
+    var thisGif = $(this).children(".gif");
+    toggleGif(thisGif);
   });
 
   //add gif to favorites
